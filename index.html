@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Aisha! 💜✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --purple-dark: #3a225d;
+            --purple-medium: #5b3286;
+            --purple-light: #9d71c7;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --text-color: #3a225d;
+            --accent-pink: #d980fa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('bg.jpg.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #4a2875;
+            color: var(--text-color);
+            font-family: 'Fredoka', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .petal {
+            position: absolute;
+            background-color: #e0b0ff;
+            border-radius: 15px 0px 15px 0px;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 100;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translate(0, -10px) rotate(0deg); opacity: 0.8; }
+            100% { transform: translate(100px, 100vh) rotate(360deg); opacity: 0.2; }
+        }
+
+        /* Floating Click Heart Animation */
+        .click-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 999;
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+        }
+
+        .cat-peeking {
+            position: absolute;
+            font-size: 2.5rem;
+            z-index: 20;
+            user-select: none;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .cat-peeking:hover {
+            transform: scale(1.2) !important;
+        }
+
+        .cat-top {
+            top: -38px; right: 25px;
+            animation: peekDown 3s infinite alternate ease-in-out;
+        }
+
+        .cat-left {
+            left: -32px; bottom: 30px;
+            transform: rotate(90deg);
+            animation: peekRight 4s infinite alternate ease-in-out;
+        }
+
+        .cat-right {
+            right: -32px; top: 40%;
+            transform: rotate(-90deg);
+            animation: peekLeft 3.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes peekDown {
+            0%, 70% { transform: translateY(0); }
+            100% { transform: translateY(8px); }
+        }
+
+        @keyframes peekRight {
+            0%, 70% { transform: rotate(90deg) translateY(0); }
+            100% { transform: rotate(90deg) translateY(8px); }
+        }
+
+        @keyframes peekLeft {
+            0%, 70% { transform: rotate(-90deg) translateY(0); }
+            100% { transform: rotate(-90deg) translateY(8px); }
+        }
+
+        .container {
+            max-width: 450px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 3px solid var(--purple-light);
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(25, 10, 45, 0.4);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            font-family: 'Cherry Bomb One', cursive;
+            color: var(--purple-medium);
+            font-size: 2.1rem;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .chat-box {
+            background: #f4ecf7;
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+            border: 2px dashed var(--purple-light);
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            animation: popIn 0.3s ease-out forwards;
+        }
+
+        .bot-bubble {
+            background: #ffffff;
+            color: var(--text-color);
+            align-self: flex-start;
+            border: 2px solid var(--purple-light);
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-bubble {
+            background: var(--purple-medium);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card {
+            aspect-ratio: 1;
+            background: #eae0f2;
+            border: 3px solid var(--purple-light);
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: transform 0.2s, background-color 0.2s;
+            user-select: none;
+        }
+
+        .card:hover { transform: scale(1.05); }
+
+        .card.revealed {
+            background: #ffffff;
+            border-color: var(--purple-medium);
+        }
+
+        .btn {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            background: var(--purple-medium);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(91, 50, 134, 0.3);
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .btn:hover {
+            background: #4a2875;
+            transform: scale(1.03);
+        }
+
+        /* Cake Candle Blowout Stage Styling */
+        .cake-container {
+            font-size: 5rem;
+            margin: 20px 0;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            display: inline-block;
+        }
+
+        .flame {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            animation: flicker 0.6s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.2); }
+        }
+
+        /* Secret Toast Popup */
+        .toast {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--purple-medium);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        #letter-screen {
+            display: none;
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        .letter-image-container {
+            border: 3px solid var(--purple-light);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background: #fff;
+        }
+
+        .letter-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 17px;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body onclick="spawnHeart(event)">
+
+<div class="toast" id="toast">Meow! 🐱 Aisha is the coolest!</div>
+
+<div class="container">
+    <div class="cat-peeking cat-top" onclick="triggerCatSecret('Meow! Aisha is awesome! 🐾')">🐱</div>
+    <div class="cat-peeking cat-left" onclick="triggerCatSecret('Wishing you lots of treats & joy! 🧁')">🐾</div>
+    <div class="cat-peeking cat-right" onclick="triggerCatSecret('Purrrfect day for Aisha! ✨')">😸</div>
+
+    <!-- STAGE 1: Chat -->
+    <div id="chat-screen">
+        <h1>Hey Aisha! ✨</h1>
+        <div class="chat-box" id="chat-box">
+            <div class="chat-bubble bot-bubble">Psst... Aisha, do you know what day it is today? 🤔</div>
+        </div>
+        <button class="btn" id="chat-btn" onclick="nextChatStep()">Is it... my birthday? 🥺</button>
+    </div>
+
+    <!-- STAGE 2: Mini Game -->
+    <div id="game-screen" style="display: none;">
+        <h1>Unlock Your Surprise 🎁</h1>
+        <p style="margin-bottom: 15px; font-size: 0.9rem;">Match the cute pairs to move forward, Aisha!</p>
+        <div class="game-board" id="board"></div>
+    </div>
+
+    <!-- STAGE 3: Make a Wish & Blow Candles -->
+    <div id="cake-screen" style="display: none;">
+        <h1>Make a Wish! 🕯️</h1>
+        <p style="font-size: 0.9rem;">Tap the cake to blow out your candles, Aisha!</p>
+        <div class="cake-container" onclick="blowCandles()">
+            <div class="flame" id="flame">🔥</div>
+            🎂
+        </div>
+        <p id="wish-hint" style="font-size: 0.85rem; color: var(--purple-light);">Make a wish first... 💭</p>
+    </div>
+
+    <!-- STAGE 4: Final Letter -->
+    <div id="letter-screen">
+        <div class="letter-image-container">
+            <img src="letter.jpg.png.jpeg" alt="Birthday Letter for Aisha" class="letter-img">
+        </div>
+        <button class="btn" onclick="triggerConfetti(); playSound('win');">More Magic! ✨</button>
+    </div>
+</div>
+
+<script>
+    /* Audio Synthesis Engine (Web Audio API) */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(type) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        } else if (type === 'match') {
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        } else if (type === 'win') {
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.4);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+        }
+    }
+
+    /* Interactive Tap Effect */
+    function spawnHeart(e) {
+        const emojis = ['💜', '✨', '🌸', '💖', '🐾'];
+        const heart = document.createElement('div');
+        heart.className = 'click-heart';
+        heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = e.clientX + 'px';
+        heart.style.top = e.clientY + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1000);
+    }
+
+    /* Peeking Cat Easter Egg */
+    function triggerCatSecret(msg) {
+        playSound('click');
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    /* Chat Logic */
+    let chatStep = 0;
+    const chatBox = document.getElementById('chat-box');
+    const chatBtn = document.getElementById('chat-btn');
+
+    function nextChatStep() {
+        playSound('click');
+        if (chatStep === 0) {
+            addBubble("Is it... my birthday? 🥺", "user-bubble");
+            setTimeout(() => {
+                addBubble("YES! 🎉 Happy Birthday Aisha! I made something super special for you!", "bot-bubble");
+                chatBtn.innerText = "Yay! Show me! 💕";
+            }, 600);
+            chatStep++;
+        } else if (chatStep === 1) {
+            addBubble("Yay! Show me! 💕", "user-bubble");
+            setTimeout(() => {
+                addBubble("First, you have to win a quick little game! Ready, Aisha? 🎀", "bot-bubble");
+                chatBtn.innerText = "Let's Play! 🌸";
+            }, 600);
+            chatStep++;
+        } else if (chatStep === 2) {
+            document.getElementById('chat-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            initGame();
+        }
+    }
+
+    function addBubble(text, className) {
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${className}`;
+        bubble.innerText = text;
+        chatBox.appendChild(bubble);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    /* Game Logic */
+    const icons = ['🐱', '🌸', '🍰'];
+    let deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
+    let firstCard = null, secondCard = null, lockBoard = false, matches = 0;
+
+    function initGame() {
+        const board = document.getElementById('board');
+        deck.forEach((icon) => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.icon = icon;
+            card.innerText = '❓';
+            card.addEventListener('click', flipCard);
+            board.appendChild(card);
+        });
+    }
+
+    function flipCard() {
+        if (lockBoard || this === firstCard || this.classList.contains('revealed')) return;
+        playSound('click');
+        this.innerText = this.dataset.icon;
+        this.classList.add('revealed');
+
+        if (!firstCard) {
+            firstCard = this;
+            return;
+        }
+
+        secondCard = this;
+        lockBoard = true;
+
+        if (firstCard.dataset.icon === secondCard.dataset.icon) {
+            matches++;
+            playSound('match');
+            resetTurn();
+            if (matches === 3) setTimeout(showCakeScreen, 500);
+        } else {
+            setTimeout(() => {
+                firstCard.innerText = '❓';
+                secondCard.innerText = '❓';
+                firstCard.classList.remove('revealed');
+                secondCard.classList.remove('revealed');
+                resetTurn();
+            }, 800);
+        }
+    }
+
+    function resetTurn() {
+        [firstCard, secondCard, lockBoard] = [null, null, false];
+    }
+
+    /* Cake Candle Blowout Logic */
+    function showCakeScreen() {
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('cake-screen').style.display = 'block';
+    }
+
+    function blowCandles() {
+        const flame = document.getElementById('flame');
+        if (flame.innerText === '💨') return;
+        
+        flame.innerText = '💨';
+        playSound('win');
+        triggerConfetti();
+        document.getElementById('wish-hint').innerText = "Wish made! Unlocking your letter... ✨";
+        
+        setTimeout(showLetter, 1500);
+    }
+
+    /* Final Letter Screen */
+    function showLetter() {
+        document.getElementById('cake-screen').style.display = 'none';
+        document.getElementById('letter-screen').style.display = 'block';
+        startPetals();
+        triggerConfetti();
+    }
+
+    function startPetals() {
+        for (let i = 0; i < 25; i++) {
+            setTimeout(createPetal, i * 200);
+        }
+    }
+
+    function createPetal() {
+        const petal = document.createElement('div');
+        petal.classList.add('petal');
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.width = Math.random() * 12 + 8 + 'px';
+        petal.style.height = Math.random() * 12 + 8 + 'px';
+        petal.style.animationDuration = Math.random() * 3 + 3 + 's';
+        document.body.appendChild(petal);
+
+        setTimeout(() => petal.remove(), 6000);
+    }
+
+    function triggerConfetti() {
+        confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { y: 0.6 },
+            colors: ['#9d71c7', '#d980fa', '#e0b0ff', '#ffffff']
+        });
+    }
+</script>
+</body>
+</html>
